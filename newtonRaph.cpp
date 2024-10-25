@@ -2,54 +2,9 @@
 #include <vector>
 #include <cmath>
 #include <functional>
+#include <cblas.h>
 
 using namespace std;
-
-//vector<double> newtonRaphson(function<double(double)> gradient, function<double(double)> hessian, vector<double> X);
-//
-//vector<double> newtonRaphson(function<double(double)> gradient, function<double(double)> hessian, vector<double> X)
-//{
-//    int len = X.size();
-//
-//    int i;
-//    int j;
-//    int max_j = 1000; // can change this to be whatever 
-//    double x;
-//    double delta;
-//    double tolerance = 1e-6; // same with this
-//    vector<double> roots = X; // initial guesses
-//
-//    for (i = 0; i < len; ++i)
-//    {
-//        x = X[i];
-//        j = 0;
-//        while (j < max_j)
-//        {
-//            if (fabs(gradient(x)) < tolerance) // while absolute value of gradient is less than tolerance
-//                break; // solution found within tolerance
-//            if (hessian(x) == 0)
-//                break; // cant divide by 0
-//
-//            delta = gradient(x) / hessian(x);
-//
-//            x = x - delta;
-//
-//            if (fabs(delta) < tolerance)
-//                break; // if change is less than tolerance, stop
-//
-//            ++j;
-//
-//        }
-//        
-//        if (j == max_j)
-//            cout << "Maximum iterations reached at X[" << i << "]" << endl;
-//
-//        roots[i] = x; // store computed root
-//    }
-//
-//    return roots;
-//}
-
 
 double newtonApprox(double beta, function <double(double)> gradient, function <double(double)> hessian, double tol)
 {
@@ -71,6 +26,8 @@ double newtonApprox(double beta, function <double(double)> gradient, function <d
 
 double f(double x)
 {
+    int n; 
+    int p;
     return pow(x, 3) + 2;
 }
 
