@@ -6,22 +6,22 @@
 
 using namespace std;
 
-double newtonApprox(double beta, function <double(double)> gradient, function <double(double)> hessian, double tol)
+vector<double(double)> newtonApprox(double beta, Eigen::MatrixXd gradient, Eigen::MatrixXd hessian, double tol)
 {
-    double beta1;
-    double calc0, calc1;
+    // double beta1;
+    // double calc0, calc1;
 
-    calc0 = gradient(beta);
-    calc1 = hessian(beta);
+    // calc0 = gradient(beta);
+    // calc1 = hessian(beta);
 
-    if (tol >= fabs(gradient(beta)))
-    {
-        return beta;
-    }
+    // if (tol >= fabs(gradient(beta)))
+    // {
+    //     return beta;
+    // }
     
-    beta1 = beta - (calc0 / calc1);
+    // beta1 = beta - (calc0 / calc1);
 
-    return newtonApprox(beta1, gradient, hessian, tol);
+    // return newtonApprox(beta1, gradient, hessian, tol);
 }
 
 Eigen::MatrixXd gradient(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::VectorXd B)
@@ -33,9 +33,11 @@ Eigen::MatrixXd gradient(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::VectorXd B
     return result;
 }
 
-double hessian(double x)
+Eigen::MatrixXd hessian(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::VectorXd B)
 {
-    return 3 * pow(x, 3);
+    Eigen::MatrixXd secondTerm = (1.0 / (1.0 + (-X.transpose() * B).array().exp())).matrix();   // 1/(1+e^XTB)
+    Eigen::MatrixXd result = X.transpose() * (-secondTerm) * (-secondTerm) * X;
+    return result;
 }
 
 int main()
