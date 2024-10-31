@@ -2,7 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <functional>
-#include <cblas.h>
+#include <Eigen/Dense>
 
 using namespace std;
 
