@@ -28,12 +28,12 @@ double f(double x)
 {
     int n; 
     int p;
-    return pow(x, 3) + 2;
+    return pow(x, 2);
 }
 
 double fp(double x)
 {
-    return 3 * pow(x, 2);
+    return 3 * pow(x, 3);
 }
 
 int main()
