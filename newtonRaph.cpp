@@ -24,11 +24,14 @@ double newtonApprox(double beta, function <double(double)> gradient, function <d
     return newtonApprox(beta1, gradient, hessian, tol);
 }
 
-double f(double x)
+Eigen::MatrixXd gradient(Eigen::MatrixXd X, Eigen::MatrixXd Y, double B)
 {
-    int n; 
-    int p;
-    return pow(x, 2);
+    Eigen::MatrixXd XT = X.transpose();
+
+    Eigen::MatrixXd secondPart = (1.0 / (1.0 + (-XT.array() * B).exp())).matrix();
+    Eigen::MatrixXd result = Y - secondPart;
+
+    return result;
 }
 
 double fp(double x)
@@ -39,12 +42,6 @@ double fp(double x)
 int main()
 {
 
-    double ep = 0.001;
-    double n = 2;
-    double ans;
-
-    ans = newtonApprox(n, f, fp, ep);
-    cout << ans << endl;
     return 0;
 }
 
