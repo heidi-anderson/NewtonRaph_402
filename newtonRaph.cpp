@@ -4,54 +4,58 @@
 #include <Eigen/Dense>
 
 using namespace std;
+using namespace Eigen;
 
-vector<double(double)> newtonApprox(double beta, Eigen::MatrixXd gradient, Eigen::MatrixXd hessian, double tol)
+template<typename Derived>
+
+VectorXd newtonRaphson(VectorXd B, MatrixXd X, MatrixXd Y, double tol)
 {
-    // double beta1;
-    // double calc0, calc1;
+    MatrixXd gradient;
+    MatrixXd hessian;
+    MatrixXd betaValues;
 
-    // calc0 = gradient(beta);
-    // calc1 = hessian(beta);
+    betaValues << B.transpose();
 
-    // if (tol >= fabs(gradient(beta)))
-    // {
-    //     return beta;
-    // }
-    
-    // beta1 = beta - (calc0 / calc1);
+    while(gradient.norm() < tol)
+    {
+        gradient = gradient(X, Y, B);
+        hessian = hessian(X, Y, B);
 
-    // return newtonApprox(beta1, gradient, hessian, tol);
+
+        B = gradient / hessian; // newton raphson step
+        betaValues << B.tranpose(); // putting the vector into a matrix
+
+        if(B.norm() < tol) // if tolerance is larger than the norm of beta we're good... right?
+            break;
+
+    }
+
+    return B;
+
 }
 
-Eigen::MatrixXd gradient(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::VectorXd B)
+MatrixXd gradient(MatrixXd X, MatrixXd Y, VectorXd B)
 {
-
-    Eigen::MatrixXd secondPart = (1.0 / (1.0 + (-X.transpose() * B).array().exp())).matrix();
-    Eigen::MatrixXd result = Y - secondPart;
+    VectorXd regressionLine = X.transpose() * B;
+    ArrayXd probs = 1 / (1 + (-regressionLine).array().exp()); 
+    MatrixXd result = Y = probs;
 
     return result;
 }
 
-Eigen::MatrixXd hessian(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::VectorXd B)
+MatrixXd hessian(MatrixXd X, MatrixXd Y, VectorXd B)
 {
-    Eigen::MatrixXd secondTerm = (1.0 / (1.0 + (-X.transpose() * B).array().exp())).matrix();   // 1/(1+e^XTB)
-    Eigen::MatrixXd result = X.transpose().matrix() * (-secondTerm.array()) * (1.0 - secondTerm.array()) * X;
+    VectorXd regressionLine = X.transpose()*B;
+    ArrayXd probs = 1 / (1 + ( -regressionLine).array().exp() );
+    VectorXd Dvec = probs * (1 - probs);
+    MatrixXd D = Dvec.asDiagonal();
+    MatrixXd result = X.transpose()*D*X;
     return result;
 }
 
 int main()
 {
+    // :D
 
     return 0;
 }
-
-
-// vector<double> gradient (inputs)
-// {...}
-
-//vector<double<double>> hessian ( inputs )
-// vector<double> newt
-
-// BLAS and EIGen
-
-// copy data set over and over and see what happens to eigen values of hessian do it with just two of the X variables (x_1, x_2)
