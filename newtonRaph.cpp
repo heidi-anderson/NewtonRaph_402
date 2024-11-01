@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <functional>
 #include <Eigen/Dense>
 
 using namespace std;
@@ -36,7 +35,7 @@ Eigen::MatrixXd gradient(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::VectorXd B
 Eigen::MatrixXd hessian(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::VectorXd B)
 {
     Eigen::MatrixXd secondTerm = (1.0 / (1.0 + (-X.transpose() * B).array().exp())).matrix();   // 1/(1+e^XTB)
-    Eigen::MatrixXd result = X.transpose() * (-secondTerm) * (-secondTerm) * X;
+    Eigen::MatrixXd result = X.transpose().matrix() * (-secondTerm.array()) * (1.0 - secondTerm.array()) * X;
     return result;
 }
 
