@@ -6,7 +6,9 @@
 using namespace std;
 using namespace Eigen;
 
-template<typename Derived>
+MatrixXd theGradient(MatrixXd X, MatrixXd Y, VectorXd B);
+MatrixXd theHessian(MatrixXd X, MatrixXd Y, VectorXd B);
+VectorXd newtonRaphson(VectorXd B, MatrixXd X, MatrixXd Y, double tol);
 
 VectorXd newtonRaphson(VectorXd B, MatrixXd X, MatrixXd Y, double tol)
 {
@@ -18,25 +20,26 @@ VectorXd newtonRaphson(VectorXd B, MatrixXd X, MatrixXd Y, double tol)
 
     while(gradient.norm() < tol)
     {
-        gradient = gradient(X, Y, B);
-        hessian = hessian(X, Y, B);
+        gradient = theGradient(X, Y, B);
+        hessian = theHessian(X, Y, B);
 
 
-        B = gradient * hessian.inverse(); // newton raphson step
-        betaValues << B.tranpose(); // putting the vector into a matrix
+        VectorXd B_new = B - gradient * hessian.inverse(); // newton raphson step
+        betaValues << B_new.transpose(); // putting the vector into a matrix
+
+        B = B_new;
 
         if(B.norm() < tol) // if tolerance is larger than the norm of beta we're good... right?
             break;
 
     }
 
-    printf(betaValues);
 
     return B;
 
 }
 
-MatrixXd gradient(MatrixXd X, MatrixXd Y, VectorXd B)
+MatrixXd theGradient(MatrixXd X, MatrixXd Y, VectorXd B)
 {
     VectorXd regressionLine = X.transpose() * B;
     ArrayXd probs = 1 / (1 + (-regressionLine).array().exp()); 
@@ -45,7 +48,7 @@ MatrixXd gradient(MatrixXd X, MatrixXd Y, VectorXd B)
     return result;
 }
 
-MatrixXd hessian(MatrixXd X, MatrixXd Y, VectorXd B)
+MatrixXd theHessian(MatrixXd X, MatrixXd Y, VectorXd B)
 {
     VectorXd regressionLine = X.transpose()*B;
     ArrayXd probs = 1 / (1 + ( -regressionLine).array().exp() );
