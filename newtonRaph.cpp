@@ -24,17 +24,14 @@ VectorXd newtonRaphson(VectorXd B, MatrixXd X, MatrixXd Y, double tol)
         hessian = theHessian(X, Y, B);
 
 
-        VectorXd B_new = B - gradient * hessian.inverse(); // newton raphson step
-        betaValues << B_new.transpose(); // putting the vector into a matrix
-
-        B = B_new;
+        VectorXd B = B - gradient * hessian.inverse(); // newton raphson step
+        betaValues << B.transpose(); // putting the vector into a matrix
 
         if(B.norm() < tol) // if tolerance is larger than the norm of beta we're good... right?
             break;
 
     }
-
-
+    
     return B;
 
 }
