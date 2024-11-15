@@ -31,11 +31,9 @@ VectorXd newtonRaphson(VectorXd B, MatrixXd X, VectorXd Y, double tol)
 
         if(B.norm() < tol) // if tolerance is larger than the norm of beta we're good... right?
             break;
-
     }
-    
+    cout << betaValues << endl;
     return B;
-
 }
 
 MatrixXd theGradient(MatrixXd X, VectorXd Y, VectorXd B)
@@ -103,11 +101,11 @@ bool getData(const string& filename, MatrixXd& X, VectorXd& Y, VectorXd& B)
 
     for(int k = 0; k < cols; ++k)
         Y(k) = rawData[rows - 1][k];
-    Y.resize(rows - 1);
+    Y.resize(rows);
 
     for(int l = 0; l < cols; ++l)
         B(l) = l + 1;
-    B.resize(cols);
+    B.resize(cols - 1);
     return true;
 }
 
